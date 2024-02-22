@@ -827,8 +827,8 @@ rspBART <- function(x_train,
       # Adding up the contribution for each tree with respect to the covariate (i)
       if(main_effects_pred){
         for(ii in 1:length(main_effects_train_list)){
-          main_effects_train_list[[ii]][i,] <- main_effects_train_list[[ii]][i,] + update_betas_aux$y_hat_train[,ii] + update_gamma_aux$intercept_fit
-          main_effects_test_list[[ii]][i,] <- main_effects_test_list[[ii]][i,] + update_betas_aux$y_hat_test[,ii] + update_gamma_aux$intercept_test
+          main_effects_train_list[[ii]][i,] <- main_effects_train_list[[ii]][i,] + update_betas_aux$y_hat_train[,ii]# + update_gamma_aux$intercept_fit
+          main_effects_test_list[[ii]][i,] <- main_effects_test_list[[ii]][i,] + update_betas_aux$y_hat_test[,ii]# + update_gamma_aux$intercept_test
         }
 
       }
