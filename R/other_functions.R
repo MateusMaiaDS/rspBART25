@@ -4,7 +4,7 @@ new_basis <- function(master_var, #It's only with respect to the master variable
                       data, pen_basis = TRUE){
 
   # New x_min and x_max
-  x_subset <- data$x_train[train_observations_index,master_var]
+  x_subset <- data$x_train[,master_var]
   xmin <- min(x_subset)
   xmax <- max(x_subset)
 
@@ -27,11 +27,13 @@ new_basis <- function(master_var, #It's only with respect to the master variable
 new_basis_list <- function(pred_vars_,
                       master_var_, #It's only with respect to the master variable
                       train_observations_index,
-                      data, pen_basis = TRUE){
+                      data, pen_basis = TRUE,
+                      new_subset = FALSE){ # TAKE CARE HERE USING OLD SUBSET
 
   if(!(master_var_ %in% 1:(length(data$dummy_x$continuousVars)))){
     stop("error master_var isnt a main effect")
   }
+
   # New x_min and x_max
   x_subset <- data$x_train[train_observations_index,,drop = FALSE]
   xmin <- min(x_subset)
@@ -58,9 +60,14 @@ new_basis_list <- function(pred_vars_,
   }
 
   for(ii in all_main_effects_index){
-    new_knots_aux <- DALSM::qknots(x = x_subset[,ii],equid.knots = TRUE,K = data$nIknots)
-    new_B_aux <- DALSM::centeredBasis.gen(x = x_subset[,ii],knots = new_knots_aux$knots,pen.order = data$dif_order)
-
+    if(new_subset){ # If this is true generates a new basis for each terminal node
+      new_knots_aux <- DALSM::qknots(x = x_subset[,ii],equid.knots = TRUE,K = data$nIknots)
+      new_B_aux <- DALSM::centeredBasis.gen(x = x_subset[,ii],knots = new_knots_aux$knots,pen.order = data$dif_order)
+    } else {
+      new_knots_aux <- DALSM::qknots(x = data$x_train[,ii],equid.knots = TRUE,K = data$nIknots)
+      new_B_aux <- DALSM::centeredBasis.gen(x = data$x_train[,ii],knots = new_knots_aux$knots,pen.order = data$dif_order)
+      new_B_aux$B <- new_B_aux$B[train_observations_index,,drop = FALSE] # Getting the subset of it
+    }
     if(pen_basis){
       B_train_main[[ii]] <- new_B_aux$B%*%data$Diff_term
     } else {
@@ -97,11 +104,13 @@ new_basis_list_test <- function(pred_vars_,
                            master_var_, #It's only with respect to the master variable
                            train_observations_index,
                            test_observations_index,
-                           data, pen_basis = TRUE){
+                           data, pen_basis = TRUE,
+                           new_subet = FALSE){ # TAKE CARE HERE USING OLD SUBSET
 
   # New x_min and x_max
   x_subset <- data$x_train[train_observations_index,,drop = FALSE]
   x_test_subset <- data$x_test[test_observations_index,,drop = FALSE]
+
   xmin <- min(x_subset)
   xmax <- max(x_subset)
 
@@ -126,8 +135,15 @@ new_basis_list_test <- function(pred_vars_,
   }
 
   for(ii in all_main_effects_index){
-    new_knots_aux <- DALSM::qknots(x = x_subset[,ii],equid.knots = TRUE,K = data$nIknots)
-    new_B_aux <- DALSM::centeredBasis.gen(x = x_test_subset[,ii],knots = new_knots_aux$knots,pen.order = data$dif_order)
+
+    if(new_subet){
+      new_knots_aux <- DALSM::qknots(x = x_subset[,ii],equid.knots = TRUE,K = data$nIknots)
+      new_B_aux <- DALSM::centeredBasis.gen(x = x_test_subset[,ii],knots = new_knots_aux$knots,pen.order = data$dif_order)
+    } else {
+      new_knots_aux <- DALSM::qknots(x = data$x_train[,ii],equid.knots = TRUE,K = data$nIknots)
+      new_B_aux <- DALSM::centeredBasis.gen(x = data$x_test[,ii],knots = new_knots_aux$knots,pen.order = data$dif_order)
+      new_B_aux$B <- new_B_aux$B[test_observations_index,,drop = FALSE]
+    }
 
     if(pen_basis){
       B_test_main[[ii]] <- new_B_aux$B%*%data$Diff_term

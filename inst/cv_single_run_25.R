@@ -11,7 +11,7 @@ devtools::load_all("/users/research/mmarques/spline_bart_lab/rspBART25")
 
 # Simulation arguments
 set.seed(42)
-n_ <- 250
+n_ <- 500
 sd_ <- 1
 n_rep_ <- 10
 
@@ -188,7 +188,7 @@ rsp_mod <- rspBART(x_train = x_train,
 
 
 
-saveRDS(object = rsp_mod,file = paste0("/users/research/mmarques/spline_bart_lab/preliminar_results/rspBART25/",type_,"/single_run/v30_single_run_rep_",
+saveRDS(object = rsp_mod,file = paste0("/users/research/mmarques/spline_bart_lab/preliminar_results/rspBART25/",type_,"/single_run/v31_single_run_rep_",
                                        selected_rep_,"_n_",n_,
                                       "_sd_",sd_,"_nIknots_",nIknots,"_ntree_",n_tree,"_nodesize_",node_min_size,
                                       "_dif_",dif_order,"_scale_",scale_bool,"_sc_basis_",scale_basis_function,

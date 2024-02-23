@@ -11,7 +11,7 @@ set.seed(42)
 competitors_only <- FALSE
 
 
-n_ <- 250
+n_ <- 1000
 sd_ <- 1
 n_rep_ <- 10
 nIknots_ <- 20
