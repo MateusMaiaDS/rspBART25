@@ -1306,7 +1306,7 @@ updateBetas <- function(tree,
 
       # old_betas <- matrix(tree[[t_nodes_names[i]]]$betas_vec[leaf_basis_subindex],nrow = 1) # This can be problematic
 
-      res_leaf <- matrix(curr_part_res[cu_t$train_index], ncol=1) -(pred_minus_jj+cu_t$gamma)
+      res_leaf <- matrix(curr_part_res[cu_t$train_index], ncol=1) - (pred_minus_jj+cu_t$gamma)
 
       # Adding a new step where I remove the mean of the res_leaf
       # res_leaf_mean <- mean(res_leaf)
@@ -1397,7 +1397,7 @@ updateGammas <- function(tree,
     sample_gamma <- stats::rnorm(n = 1,mean = mean_gamma,sd = sd_gamma)
 
     # Updating the tree
-    tree[[t_nodes_names]]$gamma <- sample_gamma
+    tree[[t_nodes_names[i]]]$gamma <- sample_gamma
     intercept_fit_vec[cu_t$train_index] <- sample_gamma
     intercept_fit_test_vec[cu_t$test_index] <- sample_gamma
   }

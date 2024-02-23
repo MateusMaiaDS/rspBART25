@@ -1,7 +1,7 @@
 # rm(list=ls())
 library(ggplot2)
 library(tidyverse)
-devtools::load_all()
+devtools::load_all(path = "/users/research/mmarques/spline_bart_lab/rspBART25/")
 # rsp_mod <- readRDS("~/spline_bart_lab/preliminar_results/rspBART17/friedman/single_run/v20_single_run_rep_1_n_250_sd_1_nIknots_2_ntree_20_nodesize_15_dif_1_scale_TRUE_sc_basis_TRUE_nmcmc_5000_nburn_2500_rb_prior_FALSE.Rds")
 
 
@@ -25,7 +25,7 @@ for(jj in 1:(NCOL(x_train)+1)){
 
   if(jj <= NCOL(x_train)){
     plot(x_train[,jj],colMeans(main_effects_train_list_norm[[jj]][n_burn_plot:n_mcmc,, drop = FALSE]),main = paste0('X',jj),
-         ylab = paste0('G(X',jj,')'),pch=20,ylim = c(-20,20),xlab = paste0('x.',jj), col = alpha("black",1.0))
+         ylab = paste0('G(X',jj,')'),pch=20,ylim = c(-10,10),xlab = paste0('x.',jj), col = alpha("black",1.0))
   }    else if(jj == NCOL(x_train)+1 ) {
     par(mfrow=c(1,1))
     scatterplot3d::scatterplot3d(x_train[,1], x_train[,2],
@@ -89,22 +89,22 @@ var_imp_mean <- variable_importance_matrix[burn_sample_:n_mcmc,,drop = FALSE] %>
 # rsp_mod$all_tau_beta %>% apply(2,var) %>% plot
 # rsp_mod$all_tau_beta[, c(1:5,11),drop = FALSE] %>% apply(2,var) %>% points(pch= 20)
 #
-# rmse(x = rsp_mod$y_train_hat[3501:n_mcmc,,drop = FALSE] %>% colMeans(), rsp_mod$data$y_train)
-# rmse(x = rsp_mod$y_test_hat[3501:n_mcmc,,drop = FALSE] %>% colMeans(), y_test)
-# mae(x = rsp_mod$y_test_hat[3501:n_mcmc,,drop = FALSE] %>% colMeans(), y_test)
+rmse(x = rsp_mod$y_train_hat[3501:n_mcmc,,drop = FALSE] %>% colMeans(), rsp_mod$data$y_train)
+rmse(x = rsp_mod$y_test_hat[3501:n_mcmc,,drop = FALSE] %>% colMeans(), y_test)
+mae(x = rsp_mod$y_test_hat[3501:n_mcmc,,drop = FALSE] %>% colMeans(), y_test)
 #
 # # Running the same model for BART and softbart
-# bart_mod <- dbarts::bart(x.train = rsp_mod$data$x_train,
-#                          y.train = rsp_mod$data$y_train,x.test = rsp_mod$data$x_test)
-#
-# softbart_mod <- SoftBart::softbart(X = rsp_mod$data$x_train,
-#                                    Y = rsp_mod$data$y_train,X_test =  rsp_mod$data$x_test)
-#
-# rmse(x = bart_mod$yhat.test.mean, y_test)
-# mae(x = bart_mod$yhat.test.mean, y_test)
-#
-# rmse(x = softbart_mod$y_hat_test_mean, y_test)
-# mae(x = softbart_mod$y_hat_test_mean, y_test)
+bart_mod <- dbarts::bart(x.train = rsp_mod$data$x_train,
+                         y.train = rsp_mod$data$y_train,x.test = rsp_mod$data$x_test)
+
+softbart_mod <- SoftBart::softbart(X = rsp_mod$data$x_train,
+                                   Y = rsp_mod$data$y_train,X_test =  rsp_mod$data$x_test)
+
+rmse(x = bart_mod$yhat.test.mean, y_test)
+mae(x = bart_mod$yhat.test.mean, y_test)
+
+rmse(x = softbart_mod$y_hat_test_mean, y_test)
+mae(x = softbart_mod$y_hat_test_mean, y_test)
 
 par(mfrow=c(1,2))
 all_tau_beta[burn_sample_:n_mcmc,,drop = FALSE] %>% apply(2,sd) %>% plot(main = expression(sigma[lambda[j]]))

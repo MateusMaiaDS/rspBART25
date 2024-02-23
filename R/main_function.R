@@ -653,6 +653,7 @@ rspBART <- function(x_train,
 
 
   }
+
   # Initialing for storing post samples
   post <- 0
 

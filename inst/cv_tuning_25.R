@@ -11,10 +11,10 @@ set.seed(42)
 competitors_only <- FALSE
 
 
-n_ <- 1000
+n_ <- 250
 sd_ <- 1
 n_rep_ <- 10
-nIknots_ <- 10
+nIknots_ <- 20
 ntree_ <- 10
 dif_order_ <- 2
 use_bs_ <- FALSE
@@ -127,7 +127,7 @@ doParallel::registerDoParallel(cl)
 # Testing the simple n_tree
 result <- foreach(i = 1:n_rep_, .packages = c("dbarts","SoftBart","MOTRbart","dplyr")) %dopar%{
 
-  devtools::load_all()
+  devtools::load_all("/users/research/mmarques/spline_bart_lab/rspBART25/")
   source("/users/research/mmarques/spline_bart_lab/rspBART25/R/sim_functions.R")
   source("/users/research/mmarques/spline_bart_lab/rspBART25/R/main_function.R")
   source("/users/research/mmarques/spline_bart_lab/rspBART25/R/cv_functions.R")
@@ -163,7 +163,7 @@ if(competitors_only){
   saveRDS(object = result,file = paste0("/users/research/mmarques/spline_bart_lab/preliminar_results/rspBART25/",type_,"/competitors_n_",n_,
                                         "_sd_",sd_,".Rds"))
 } else {
-  saveRDS(object = result,file = paste0("/users/research/mmarques/spline_bart_lab/preliminar_results/rspBART25/",type_,"/v28_psBART_n_",n_,
+  saveRDS(object = result,file = paste0("/users/research/mmarques/spline_bart_lab/preliminar_results/rspBART25/",type_,"/v29_psBART_n_",n_,
                                         "_sd_",sd_,"_nIknots_",nIknots_,"_ntree_",ntree_,
                                         "_alpha_",alpha_,"_dif_",dif_order_,"_nmin_",node_min_size_,
                                         "_nmcmc_",n_mcmc_,"_nburn_",n_burn_,".Rds"))
